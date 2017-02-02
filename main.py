@@ -45,22 +45,22 @@ form_main = '''
             <tr>
                 <td><label>Username:</label></td>
                 <td><input type="text" name="username"   value="%(username)s" required /></td>
-                <td><p>%(error_un)s</p></td>
+                <td><p style="color:red">%(error_un)s</p></td>
             </tr>
             <tr>
                 <td><label>Password:</label></td>
                 <td><input type="password" name="password"  value="" required /></td>
-                <td><p>%(error_password)s</p></td>
+                <td><p style="color:red">%(error_password)s</p></td>
             </tr>
             <tr>
                 <td><label>Confirm Password:</label></td>
                 <td><input type="password" name="password2" value="" required /></td>
-                <td><p>%(error_verify)s</p></td>
+                <td><p style="color:red">%(error_verify)s</p></td>
             </tr>
             <tr>
                 <td><label>Email: (optional)</label></td>
                 <td><input type="email" name="email" value="%(email)s" /></td>
-                <td><p>%(error_email)s</p></td>
+                <td><p style="color:red">%(error_email)s</p></td>
             </tr>
         </tbody>
         </table>
@@ -76,6 +76,7 @@ def escape_html(s):
 class MainHandler(webapp2.RequestHandler):
     def verify_username(self, username):
         un = self.request.get("username")
+        escape_html(un)
         temp = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
         username = temp.match(un)
         if username == True:
@@ -114,9 +115,11 @@ class MainHandler(webapp2.RequestHandler):
 
     def post(self):
         username = self.request.get("username")
+        username= escape_html(username)
         pass1 = self.request.get("password")
         pass2 = self.request.get("password2")
         email = self.request.get("email")
+        email = escape_html(email)
         has_error = False
 
         parameters = dict(username=username, email=email)
