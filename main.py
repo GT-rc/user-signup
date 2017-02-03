@@ -49,7 +49,7 @@ form_main = '''
             </tr>
             <tr>
                 <td><label>Password:</label></td>
-                <td><input type="password" name="password"  value="" required /></td>
+                <td><input type="password" name="password" value="" required /></td>
                 <td><p style="color:red">%(error_password)s</p></td>
             </tr>
             <tr>
@@ -84,14 +84,18 @@ class MainHandler(webapp2.RequestHandler):
         elif username == None:
             return False
 
+
     def verify_password(self, password):
-        pw = self.request.get("password")
-        tempa = re.compile(r"^.{3,20}$")
-        password = tempa.match(pw)
-        if password == True:
-            return True
-        elif password == None:
-            return False
+        PW_RE = re.compile(r"^.{3,20}$")
+        return PW_RE.match(password)
+
+        # pw = self.request.get("password")
+        # tempa = re.compile(r"^.{3,20}$")
+        # password = tempa.match(pw)
+        # if password == True:
+        #     return True
+        # elif password == None:
+        #     return False
 
 
     def valid_email(self, email):
@@ -133,6 +137,10 @@ class MainHandler(webapp2.RequestHandler):
             has_error = True
             parameters['error_password'] = "Please enter a valid password."
             #self.redirect('/?error_password=' + error_password)
+
+        if self.verify_password(pass1) == None:
+            has_error = True
+            parameters['error_password'] = "Please enter a valid password."
 
         if (pass1 != pass2) or (pass1 == '') or (pass2 == ''):
             has_error = True
